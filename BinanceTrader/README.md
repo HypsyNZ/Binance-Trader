@@ -1,3 +1,10 @@
+### Version 2.6.0.8
+- [x] All Orders placed by the Scraper are now `Fill or Kill Limit Orders`
+- [x] `Sell Percent` is now the `Minimum PnL` allowed
+- [x] `Reverse Percent` is now the `Minimum PnL` allowed
+- [x] Orders by the `Scraper` will fail if slippage occurs and it will return to the previous `Mode`
+- [x] You can now `Switch` when the Buy/Sell orders are backwards
+
 ### Version 2.6.0.7
 - [x] You can no longer manually close unprofitable trades with the `Scraper`
 - [x] The `Scraper` will avoid slippage when you click `Close`

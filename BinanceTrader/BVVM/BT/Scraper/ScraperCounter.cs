@@ -26,7 +26,6 @@ using BinanceAPI.Enums;
 using BTNET.BVVM.Helpers;
 using PrecisionTiming;
 using System.Diagnostics;
-using System.Threading;
 
 namespace BTNET.BVVM.BT
 {
@@ -38,9 +37,9 @@ namespace BTNET.BVVM.BT
         private const int ZERO = 0;
         private const int ONE = 1;
         private const int TWO = 2;
-        private const int THREE = 3;     
+        private const int THREE = 3;
         private const int FOUR = 4;
-        private const int FIVE = 5;     
+        private const int FIVE = 5;
         private const int TEN = 10;
         private const int ELEVEN = 11;
         private const int FIFTY = 50;

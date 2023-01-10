@@ -104,6 +104,23 @@ namespace BTNET.BVVM.BT.Orders
             }
         }
 
+        public static decimal PnLAsk(OrderBase order, decimal askPrice)
+        {
+            if (askPrice == 0)
+            {
+                return 0;
+            }
+
+            if (order.CumulativeQuoteQuantityFilled != 0)
+            {
+                return order.CumulativeQuoteQuantityFilled - (askPrice * order.QuantityFilled);
+            }
+            else
+            {
+                return (order.Price * order.QuantityFilled) - (askPrice * order.QuantityFilled);
+            }
+        }
+
         public static decimal PnLBid(OrderBase order, decimal bidPrice)
         {
             if (bidPrice == 0)
@@ -113,11 +130,11 @@ namespace BTNET.BVVM.BT.Orders
 
             if (order.CumulativeQuoteQuantityFilled != 0)
             {
-                return (bidPrice * order.QuantityFilled) - order.CumulativeQuoteQuantityFilled;                
+                return (bidPrice * order.QuantityFilled) - order.CumulativeQuoteQuantityFilled;
             }
             else
             {
-                return (bidPrice * order.QuantityFilled) - (order.Price * order.QuantityFilled);                
+                return (bidPrice * order.QuantityFilled) - (order.Price * order.QuantityFilled);
             }
         }
 

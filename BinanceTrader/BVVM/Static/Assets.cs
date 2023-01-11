@@ -82,7 +82,7 @@ namespace BTNET.BVVM
                 BorrowVM.TotalLiabilityOfBtc = Static.MarginAccount.TotalLiabilityOfBtc;
                 BorrowVM.TotalNetAssetOfBtc = Static.MarginAccount.TotalNetAssetOfBtc;
 
-                BorrowVM.ShowBreakdown = SettingsVM.ShowBreakDownInfoIsChecked ?? false;
+                BorrowVM.ShowBreakdown = SettingsVM.ShowBreakDownInfoIsChecked;
             }
         }
 
@@ -113,14 +113,14 @@ namespace BTNET.BVVM
                 BorrowVM.FreeQuote = isolatedSymbol.QuoteAsset.Available;
             }
 
-            BorrowVM.ShowBreakdown = SettingsVM.ShowBreakDownInfoIsChecked ?? false;
+            BorrowVM.ShowBreakdown = SettingsVM.ShowBreakDownInfoIsChecked;
 
             return Task.CompletedTask;
         }
 
         public static Task SelectedSpotAssetUpdateAsync()
         {
-            BorrowVM.ShowBreakdown = SettingsVM.ShowBreakDownInfoIsChecked ?? false;
+            BorrowVM.ShowBreakdown = SettingsVM.ShowBreakDownInfoIsChecked;
 
             BinanceBalance? spotBase;
             BinanceBalance? spotQuote;

@@ -89,8 +89,8 @@ namespace BTNET.VM.ViewModels
         private decimal totalbase;
         private decimal totalquote;
 
-        private bool borrowSell;
-        private bool borrowBuy;
+        private bool borrowSell = false;
+        private bool borrowBuy = false;
         private bool borrowInfoVisible;
         private bool showBreakdown;
 
@@ -511,13 +511,13 @@ namespace BTNET.VM.ViewModels
             BaseBorrowVisible = true;
             BaseTotalVisible = true;
 
-            ShowBreakdown = SettingsVM.ShowBreakDownInfoIsChecked ?? false;
-            MarginInfoVisible = SettingsVM.ShowMarginInfoIsChecked ?? false;
-            IsolatedInfoVisible = SettingsVM.ShowIsolatedInfoIsChecked ?? false;
+            ShowBreakdown = SettingsVM.ShowBreakDownInfoIsChecked;
+            MarginInfoVisible = SettingsVM.ShowMarginInfoIsChecked;
+            IsolatedInfoVisible = SettingsVM.ShowIsolatedInfoIsChecked;
 
             if (BaseVisible || QuoteVisible)
             {
-                BorrowInfoVisible = SettingsVM.ShowBorrowInfoIsChecked ?? false;
+                BorrowInfoVisible = SettingsVM.ShowBorrowInfoIsChecked;
                 return;
             }
             BorrowInfoVisible = false;

@@ -29,7 +29,8 @@ namespace BTNET.BV.Abstract
         public SettingsObjectScraper(decimal sellPercent, decimal downPercent, decimal priceBias, int waitCount, decimal waitTime,
             decimal resetupS, decimal resetdownS, decimal divPercent,
             decimal resetUpL, decimal resetDownL, decimal resetTime,
-            decimal timeBias, decimal upBias, decimal downBias, decimal deadTime)
+            decimal timeBias, decimal upBias, decimal downBias, decimal deadTime,
+            bool useLimitBuy, bool useLimitSell, bool useLimitAdd, bool useLimitClose)
         {
             SellPercent = sellPercent;
             DownPercent = downPercent;
@@ -49,24 +50,34 @@ namespace BTNET.BV.Abstract
             UpBias = upBias;
             DownBias = downBias;
             DeadTime = deadTime;
+
+            UseLimitBuy = useLimitBuy;
+            UseLimitSell = useLimitSell;
+            UseLimitAdd = useLimitAdd;
+            UseLimitClose = useLimitClose;
         }
 
-        public decimal? ResetUpS { get; set; }
-        public decimal? ResetDownS { get; set; }
-        public decimal? DivPercent { get; set; }
-        public decimal? ResetUpL { get; set; }
-        public decimal? ResetDownL { get; set; }
-        public decimal? ResetTime { get; set; }
-        public decimal? TimeBias { get; set; }
-        public decimal? UpBias { get; set; }
-        public decimal? DownBias { get; set; }
-        public decimal? DeadTime { get; set; }
+        public bool UseLimitBuy { get; set; } = true;
+        public bool UseLimitSell { get; set; } = true;
+        public bool UseLimitAdd { get; set; } = true;
+        public bool UseLimitClose { get; set; } = true;
+
+        public decimal ResetUpS { get; set; } = 1250;
+        public decimal ResetDownS { get; set; } = 1250;
+        public decimal DivPercent { get; set; } = 30;
+        public decimal ResetUpL { get; set; } = 2500;
+        public decimal ResetDownL { get; set; } = 2500;
+        public decimal ResetTime { get; set; } = 15;
+        public decimal TimeBias { get; set; } = 5;
+        public decimal UpBias { get; set; } = 1.7m;
+        public decimal DownBias { get; set; } = 1.7m;
+        public decimal DeadTime { get; set; } = 100;
 
 
-        public decimal? SellPercent { get; set; }
-        public decimal? DownPercent { get; set; }
-        public decimal? PriceBias { get; set; }
-        public decimal? WaitTime { get; set; }
-        public int? WaitCount { get; set; }
+        public decimal SellPercent { get; set; } = 0.14m;
+        public decimal DownPercent { get; set; } = 0.042m;
+        public decimal PriceBias { get; set; } = 200;
+        public decimal WaitTime { get; set; } = 200;
+        public int WaitCount { get; set; } = 7;
     }
 }

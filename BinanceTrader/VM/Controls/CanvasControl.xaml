@@ -880,6 +880,29 @@
                                 Command="{Binding ScraperVM.DecreasePercentCommand}"
                                 IsEnabled="{Binding ScraperVM.IsChangeBiasEnabled}"/>
                         </StackPanel>
+                        <StackPanel
+                                Orientation="Horizontal"                     
+                                Grid.Row="5" 
+                                Grid.Column="0" 
+                                HorizontalAlignment="Center" 
+                                VerticalAlignment="Center">
+                            <CheckBox 
+                                    ToolTip="If you untick this box the scraper will place market orders when it Adds"
+                                    IsChecked="{Binding ScraperVM.UseLimitAdd, Mode=OneWay}"
+                                    Command="{Binding ScraperVM.UseLimitAddCommand}"/>
+                            <CheckBox 
+                                    ToolTip="If you untick this box the scraper will place market orders when it Closes"
+                                    IsChecked="{Binding ScraperVM.UseLimitClose, Mode=OneWay}"
+                                    Command="{Binding ScraperVM.UseLimitCloseCommand}"/>
+                            <CheckBox 
+                                    ToolTip="If you untick this box the scraper will place market orders when it Buys"
+                                    IsChecked="{Binding ScraperVM.UseLimitBuy, Mode=OneWay}"
+                                    Command="{Binding ScraperVM.UseLimitBuyCommand}"/>
+                            <CheckBox 
+                                    ToolTip="If you untick this box the scraper will place market orders when it Sells"
+                                    IsChecked="{Binding ScraperVM.UseLimitSell, Mode=OneWay}"
+                                    Command="{Binding ScraperVM.UseLimitSellCommand}"/>
+                        </StackPanel>
                         <TextBlock
                             Grid.Row="7"
                             Grid.ColumnSpan="2"
@@ -1265,12 +1288,12 @@
                                     ToolTip="Switch to next buy in the order list instead of waiting &#xA;This can be used to slowly close out orders"   
                                     IsChecked="{Binding ScraperVM.SwitchAutoIsChecked, Mode=OneWay}"
                                     IsEnabled="{Binding ScraperVM.IsChangeBiasEnabled}"
-                                    Command="{Binding ScraperVM.SwitchAutoCommand}"/>
+                                    Command="{Binding ScraperVM.UseSwitchAutoCommand}"/>
                             <CheckBox 
                                     ToolTip="If you tick this box the pnl/log will be cleared"
                                     IsChecked="{Binding ScraperVM.ClearStatsIsChecked, Mode=OneWay}"
                                     IsEnabled="{Binding ScraperVM.IsStartEnabled}"
-                                    Command="{Binding ScraperVM.ClearStatsCommand}"/>
+                                    Command="{Binding ScraperVM.TriggerClearStatsCommand}"/>
                         </StackPanel>
 
                         <TextBlock
@@ -1710,7 +1733,7 @@
                             Grid.Column="0"
                             Margin="2"
                             ToolTip="Manually add an order &#xA; The scraper will switch to this order with the current settings"
-                            Command="{Binding ScraperVM.StartNewCommand}" 
+                            Command="{Binding ScraperVM.AddNewCommand}" 
                             IsEnabled="{Binding ScraperVM.IsAddEnabled}"/>
                                 <Button 
                             Content="Close" 

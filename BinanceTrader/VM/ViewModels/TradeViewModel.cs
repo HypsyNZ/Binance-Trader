@@ -42,8 +42,8 @@ namespace BTNET.VM.ViewModels
         private decimal symbolPriceBuy;
         private decimal symbolPriceSell;
         private decimal orderQuantity;
-        private bool useLimitBuy;
-        private bool useLimitSell;
+        private bool useLimitBuy = false;
+        private bool useLimitSell = false;
         private bool useLimitToggleCheckbox;
 
         public ICommand? UseLimitToggleCommand { get; set; }

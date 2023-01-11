@@ -64,30 +64,30 @@ namespace BTNET.BV.Abstract
             PanelInsightsTop = panelInsightsTop;
         }
 
-        public double? PanelInsightsLeft { get; set; }
-        public double? PanelInsightsTop { get; set; }
+        public double PanelInsightsLeft { get; set; } = 566;
+        public double PanelInsightsTop { get; set; } = -577;
 
-        public double? PanelScraperLeft { get; set; }
-        public double? PanelScraperTop { get; set; }
+        public double PanelScraperLeft { get; set; } = 10;
+        public double PanelScraperTop { get; set; } = -805;
 
-        public double? PanelTradeInfoleft { get; set; }
-        public double? PanelTradeInfoTop { get; set; }
+        public double PanelTradeInfoleft { get; set; } = 10;
+        public double PanelTradeInfoTop { get; set; } = -578;
 
-        public double? PanelBreakdownLeft { get; set; }
-        public double? PanelBreakdownTop { get; set; }
+        public double PanelBreakdownLeft { get; set; } = 10;
+        public double PanelBreakdownTop { get; set; } = -279;
 
-        public double? PanelInfoBoxLeft { get; set; }
-        public double? PanelInfoBoxTop { get; set; }
+        public double PanelInfoBoxLeft { get; set; } = 10;
+        public double PanelInfoBoxTop { get; set; } = -385;
 
-        public double? PanelRealTimeLeft { get; set; }
-        public double? PanelRealTimeTop { get; set; }
+        public double PanelRealTimeLeft { get; set; } = 1055;
+        public double PanelRealTimeTop { get; set; } = -400;
 
-        public double? PanelBorrowBoxLeft { get; set; }
-        public double? PanelBorrowBoxTop { get; set; }
+        public double PanelBorrowBoxLeft { get; set; } = 10;
+        public double PanelBorrowBoxTop { get; set; } = -170;
 
-        public double? PanelMarginInfoLeft { get; set; }
-        public double? PanelMarginInfoTop { get; set; }
+        public double PanelMarginInfoLeft { get; set; } = 113;
+        public double PanelMarginInfoTop { get; set; } = -170;
 
-        public double? OrderListHeight { get; set; }
+        public double OrderListHeight { get; set; } = 80;
     }
 }

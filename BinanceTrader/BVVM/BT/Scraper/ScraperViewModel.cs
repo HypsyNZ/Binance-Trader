@@ -55,6 +55,7 @@ namespace BTNET.VM.ViewModels
         private const string ORDER_PLACED = "Order Placed:";
         private const string AFTER_BUY = "AfterBuy: Id:";
         private const string AFTER_SELL = "AfterSell: Id:";
+        private const string TYPE = " | Type: ";
         private const string SOLD = "Sold: [";
         private const string BAR = "|";
         private const string RIGHT_BRACKET = "]";
@@ -82,6 +83,9 @@ namespace BTNET.VM.ViewModels
         private const string FAILED_FOK_BUY_WAIT = "Buy Killed -> Wait Mode";
         private const string FAILED_FOK_BUY_WATCH = "Buy Killed -> Watch Mode";
         private const string FAILED_FOK_SELL_WATCH = "Sell Killed -> Watch Mode";
+        private const string FAILED_MARKET_BUY_WAIT = "Buy Failed -> Wait Mode";
+        private const string FAILED_MARKET_BUY_WATCH = "Buy Failed -> Watch Mode";
+        private const string FAILED_MARKET_SELL_WATCH = "Sell Failed -> Watch Mode";
         private const string NEXT_U = "Up ";
         private const string NEXT_D = "Down ";
         private const string TIME_ELAPSED = "Time Elapsed";

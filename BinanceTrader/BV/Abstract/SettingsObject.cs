@@ -26,9 +26,10 @@ namespace BTNET.BV.Abstract
 {
     internal class SettingsObject
     {
-        public SettingsObject(bool? showBorrowInfoIsChecked, bool? showSymbolInfoIsChecked, bool? showBreakDownInfoIsChecked,
-            bool? showMarginInfoIsChecked, bool? showIsolatedInfoIsChecked, bool? transparentTitleIsChecked, bool? checkForUpdates, bool? sellLimitChecked, bool? sellBorrowChecked, bool? buyBorrowChecked, bool? buyLimitChecked, bool? showNotifications, bool? disableOpacity,
-            bool? autoSave, bool? keepFirstOrder, bool? dangerousButtonsIsChecked, double watchListHeight, bool? showScraperButtonIsChecked)
+        public SettingsObject(bool showBorrowInfoIsChecked, bool showSymbolInfoIsChecked, bool showBreakDownInfoIsChecked,
+            bool showMarginInfoIsChecked, bool showIsolatedInfoIsChecked, bool transparentTitleIsChecked, bool checkForUpdates, bool sellLimitChecked, bool sellBorrowChecked,
+            bool buyBorrowChecked, bool buyLimitChecked, bool showNotifications, bool disableOpacity,
+            bool autoSave, bool keepFirstOrder, bool dangerousButtonsIsChecked, double watchListHeight, bool showScraperButtonIsChecked)
         {
             ShowBorrowInfoIsChecked = showBorrowInfoIsChecked;
             ShowSymbolInfoIsChecked = showSymbolInfoIsChecked;
@@ -55,31 +56,31 @@ namespace BTNET.BV.Abstract
             WatchListHeight = watchListHeight;
         }
 
-        public bool? DisableOpacity { get; set; }
-        public bool? TransparentTitleIsChecked { get; set; }
+        public bool DisableOpacity { get; set; }
+        public bool TransparentTitleIsChecked { get; set; }
 
-        public bool? ShowBorrowInfoIsChecked { get; set; }
-        public bool? ShowSymbolInfoIsChecked { get; set; }
-        public bool? ShowBreakDownInfoIsChecked { get; set; }
-        public bool? ShowMarginInfoIsChecked { get; set; }
-        public bool? ShowIsolatedInfoIsChecked { get; set; }
-        public bool? ShowScraperButtonIsChecked { get; set; }
+        public bool ShowBorrowInfoIsChecked { get; set; } = true;
+        public bool ShowSymbolInfoIsChecked { get; set; } = true;
+        public bool ShowBreakDownInfoIsChecked { get; set; } = true;
+        public bool ShowMarginInfoIsChecked { get; set; } = true;
+        public bool ShowIsolatedInfoIsChecked { get; set; } = true;
+        public bool ShowScraperButtonIsChecked { get; set; } = true;
 
-        public bool? DangerousButtonsIsChecked { get; set; }
+        public bool DangerousButtonsIsChecked { get; set; } = false;
 
-        public double? WatchListHeight { get; set; }
+        public double WatchListHeight { get; set; } = 200;
 
-        public bool? CheckForUpdates { get; set; }
+        public bool CheckForUpdates { get; set; } = false;
 
-        public bool? SellLimitChecked { get; set; }
-        public bool? SellBorrowChecked { get; set; }
+        public bool SellLimitChecked { get; set; } = false;
+        public bool SellBorrowChecked { get; set; } = false;
 
-        public bool? BuyLimitChecked { get; set; }
-        public bool? BuyBorrowChecked { get; set; }
+        public bool BuyLimitChecked { get; set; } = false;
+        public bool BuyBorrowChecked { get; set; } = false;
 
-        public bool? ShowNotifications { get; set; }
-        public bool? AutoSaveSettings { get; set; }
+        public bool ShowNotifications { get; set; } = true;
+        public bool AutoSaveSettings { get; set; } = false;
 
-        public bool? KeepFirstOrder { get; set; }
+        public bool KeepFirstOrder { get; set; } = false;
     }
 }

@@ -84,28 +84,28 @@ namespace BTNET.VM.ViewModels
 
         #endregion [Commands]
 
-        private bool saveEnabled;
-        private bool changeEnabled;
+        private bool saveEnabled = false;
+        private bool changeEnabled = false;
         private bool apiKeyEnabled = true;
         private bool apiSecretEnabled = true;
-        private bool? showSymbolInfoIsChecked = true;
-        private bool? showBorrowInfoIsChecked = true;
-        private bool? showMarginInfoIsChecked = true;
-        private bool? showIsolatedInfoIsChecked = true;
-        private bool? showBreakDownInfoIsChecked = true;
-        private bool? transparentTitleBarIsChecked = false;
-        private bool? checkForUpdatesIsChecked = false;
-        private bool? disableOpacityIsChecked = false;
-        private bool? dangerousButtonsIsChecked = false;
+        private bool showSymbolInfoIsChecked = true;
+        private bool showBorrowInfoIsChecked = true;
+        private bool showMarginInfoIsChecked = true;
+        private bool showIsolatedInfoIsChecked = true;
+        private bool showBreakDownInfoIsChecked = true;
+        private bool transparentTitleBarIsChecked = false;
+        private bool checkForUpdatesIsChecked = false;
+        private bool disableOpacityIsChecked = false;
+        private bool dangerousButtonsIsChecked = false;
+        private bool autoSaveIsChecked = false;
+        private bool keepFirstOrderIsChecked = false;
+        private bool showScraperButtonIsChecked = true;
         private double? orderOpacity = 0.7;
-        private bool checkForUpdateCheckBoxEnabled;
+        private bool checkForUpdateCheckBoxEnabled = false;
         private string isUpToDate = "";
         private string apiKey = "";
         private string apiSecret = "";
         private Brush titleBarBrush = Static.Gray;
-        private bool? autoSaveIsChecked;
-        private bool? keepFirstOrderIsChecked;
-        private bool? showScraperButtonIsChecked;
 
         public string IsUpToDate
         {
@@ -177,7 +177,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? AutoSaveIsChecked
+        public bool AutoSaveIsChecked
         {
             get => autoSaveIsChecked;
             set
@@ -187,7 +187,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? KeepFirstOrderIsChecked
+        public bool KeepFirstOrderIsChecked
         {
             get => keepFirstOrderIsChecked;
             set
@@ -197,7 +197,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? DisableOpacityIsChecked
+        public bool DisableOpacityIsChecked
         {
             get => disableOpacityIsChecked;
             set
@@ -216,7 +216,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? ShowScraperButtonIsChecked
+        public bool ShowScraperButtonIsChecked
         {
             get => showScraperButtonIsChecked;
             set
@@ -226,7 +226,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? DangerousButtonsIsChecked
+        public bool DangerousButtonsIsChecked
         {
             get => dangerousButtonsIsChecked;
             set
@@ -236,7 +236,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? ShowSymbolInfoIsChecked
+        public bool ShowSymbolInfoIsChecked
         {
             get => showSymbolInfoIsChecked;
             set
@@ -246,7 +246,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? ShowBorrowInfoIsChecked
+        public bool ShowBorrowInfoIsChecked
         {
             get => showBorrowInfoIsChecked;
             set
@@ -256,7 +256,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? ShowMarginInfoIsChecked
+        public bool ShowMarginInfoIsChecked
         {
             get => showMarginInfoIsChecked;
             set
@@ -266,7 +266,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? ShowIsolatedInfoIsChecked
+        public bool ShowIsolatedInfoIsChecked
         {
             get => showIsolatedInfoIsChecked;
             set
@@ -276,7 +276,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? ShowBreakDownInfoIsChecked
+        public bool ShowBreakDownInfoIsChecked
         {
             get => showBreakDownInfoIsChecked;
             set
@@ -286,7 +286,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? TransparentTitleBarIsChecked
+        public bool TransparentTitleBarIsChecked
         {
             get => transparentTitleBarIsChecked;
             set
@@ -296,7 +296,7 @@ namespace BTNET.VM.ViewModels
             }
         }
 
-        public bool? CheckForUpdatesIsChecked
+        public bool CheckForUpdatesIsChecked
         {
             get => checkForUpdatesIsChecked;
             set
@@ -375,25 +375,25 @@ namespace BTNET.VM.ViewModels
         private void ShowBreakDownInfo(object o)
         {
             ShowBreakDownInfoIsChecked = !ShowBreakDownInfoIsChecked;
-            BorrowVM.ShowBreakdown = ShowBreakDownInfoIsChecked ?? false;
+            BorrowVM.ShowBreakdown = ShowBreakDownInfoIsChecked;
         }
 
         private void ShowIsolatedInfo(object o)
         {
             ShowIsolatedInfoIsChecked = !ShowIsolatedInfoIsChecked;
-            BorrowVM.IsolatedInfoVisible = showMarginInfoIsChecked ?? false;
+            BorrowVM.IsolatedInfoVisible = showMarginInfoIsChecked;
         }
 
         private void ShowMarginInfo(object o)
         {
             ShowMarginInfoIsChecked = !ShowMarginInfoIsChecked;
-            BorrowVM.MarginInfoVisible = ShowMarginInfoIsChecked ?? false;
+            BorrowVM.MarginInfoVisible = ShowMarginInfoIsChecked;
         }
 
         private void ShowBorrowInfo(object o)
         {
             ShowBorrowInfoIsChecked = !ShowBorrowInfoIsChecked;
-            BorrowVM.BorrowInfoVisible = ShowBorrowInfoIsChecked ?? false;
+            BorrowVM.BorrowInfoVisible = ShowBorrowInfoIsChecked;
         }
 
         private void ShowSymbolInfo(object o)
@@ -459,24 +459,24 @@ namespace BTNET.VM.ViewModels
         public void SaveOnClose()
         {
             SettingsObject settings = new(
-                ShowBorrowInfoIsChecked ?? null,
-                ShowSymbolInfoIsChecked ?? null,
-                ShowBreakDownInfoIsChecked ?? null,
-                ShowMarginInfoIsChecked ?? null,
-                ShowIsolatedInfoIsChecked ?? null,
-                TransparentTitleBarIsChecked ?? null,
-                CheckForUpdatesIsChecked ?? null,
+                ShowBorrowInfoIsChecked,
+                ShowSymbolInfoIsChecked,
+                ShowBreakDownInfoIsChecked,
+                ShowMarginInfoIsChecked,
+                ShowIsolatedInfoIsChecked,
+                TransparentTitleBarIsChecked,
+                CheckForUpdatesIsChecked,
                 TradeVM.UseLimitSellBool,
                 BorrowVM.BorrowSell,
                 BorrowVM.BorrowBuy,
                 TradeVM.UseLimitBuyBool,
-                null, // todo: add notification setting
-                DisableOpacityIsChecked ?? null,
-                AutoSaveIsChecked ?? null,
-                KeepFirstOrderIsChecked ?? null,
-                DangerousButtonsIsChecked ?? null,
+                false, // todo: add notification setting
+                DisableOpacityIsChecked,
+                AutoSaveIsChecked,
+                KeepFirstOrderIsChecked,
+                DangerousButtonsIsChecked,
                 VisibilityVM.WatchListHeight,
-                ShowScraperButtonIsChecked ?? null);
+                ShowScraperButtonIsChecked);
 
             if (settings != null)
             {
@@ -507,7 +507,8 @@ namespace BTNET.VM.ViewModels
                 ScraperVM.WaitTime,
                 ScraperVM.ScraperCounter.GuesserResetShortCountUp, ScraperVM.ScraperCounter.GuesserResetShortCountDown, ScraperVM.ScraperCounter.GuesserDivPercent,
                 ScraperVM.ScraperCounter.GuesserResetLongCountUp, ScraperVM.ScraperCounter.GuesserResetLongCountDown, ScraperVM.ScraperCounter.GuesserResetTime,
-                ScraperVM.ScraperCounter.GuesserResetTimeBias, ScraperVM.ScraperCounter.GuesserUpBias, ScraperVM.ScraperCounter.GuesserDownBias, ScraperVM.ScraperCounter.GuesserDeadTime);
+                ScraperVM.ScraperCounter.GuesserResetTimeBias, ScraperVM.ScraperCounter.GuesserUpBias, ScraperVM.ScraperCounter.GuesserDownBias, ScraperVM.ScraperCounter.GuesserDeadTime,
+                ScraperVM.UseLimitBuy, ScraperVM.UseLimitSell, ScraperVM.UseLimitAdd, ScraperVM.UseLimitClose);
 
             if (settingsScraper != null)
             {

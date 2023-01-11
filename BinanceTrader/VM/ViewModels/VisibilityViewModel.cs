@@ -63,7 +63,7 @@ namespace BTNET.VM.ViewModels
         private bool orderSettingsVisibility = true;
         private double orderListWidthOffset;
         private double orderListHeight = ORDER_LIST_DEFAULT_HEIGHT;
-        private double watchListHeight;
+        private double watchListHeight = 200;
 
         public ICommand? OrderSettingsCommand { get; set; }
 

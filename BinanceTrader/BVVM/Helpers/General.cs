@@ -107,7 +107,7 @@ namespace BTNET.BVVM.Helpers
         {
             try
             {
-                if (SettingsVM.CheckForUpdatesIsChecked ?? false)
+                if (SettingsVM.CheckForUpdatesIsChecked)
                 {
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/HypsyNZ/Binance-Trader/releases");
                     request.UserAgent = new Random(new Random().Next()).ToString();

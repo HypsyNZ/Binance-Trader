@@ -207,7 +207,12 @@ namespace BTNET.VM.ViewModels
             SellOrderTask += SellOrderEvent;
             BuyOrderTask += BuyOrderEvent;
             FailedFoKOrderTask += FailedFokOrderEvent;
+
+            SetupTimers();
         }
+
+        protected private volatile OrderBase? WaitingBuy;
+        protected private volatile OrderBase? WaitingSell;
 
         public SolidColorBrush RunningTotalColor
         {
@@ -828,21 +833,11 @@ namespace BTNET.VM.ViewModels
             }, TaskCreationOptions.DenyChildAttach).ConfigureAwait(false);
         }
 
-        protected private void WaitingLoopStart(object o, OrderBase sell)
+        private void SetupTimers()
         {
-            UpdateStatus(WAITING, Static.Green);
-
-            ResetPriceQuantity(sell, false);
-
-            IsSwitchEnabled = true;
-            IsAddEnabled = true;
-            IsCloseCurrentEnabled = false;
-            ResetLoop();
-            StopGuesserWaitingTimer();
-
             WaitingTimer.SetInterval(() =>
             {
-                if (!WaitingBlocked)
+                if (!WaitingBlocked && WaitingSell != null)
                 {
                     if (Break())
                     {
@@ -862,7 +857,7 @@ namespace BTNET.VM.ViewModels
                             WaitingBlocked = true;
                             if (!up)
                             {
-                                if (!ProcesNextBuyOrderPrice(sell, NEXT_D + PRICE_BIAS + price + SLASH + pb, false, NextPriceDown)) // -> Success Watching Mode // <- Fail Waiting Mode
+                                if (!ProcesNextBuyOrderPrice(WaitingSell, NEXT_D + PRICE_BIAS + price + SLASH + pb, false, NextPriceDown)) // -> Success Watching Mode // <- Fail Waiting Mode
                                 {
                                     StopWaitingTimer(); // Waiting Mode is Running
                                 }
@@ -871,7 +866,7 @@ namespace BTNET.VM.ViewModels
                             }
                             else
                             {
-                                if (!ProcesNextBuyOrderPrice(sell, NEXT_U + PRICE_BIAS + price + SLASH + pb, false, NextPriceUp)) // -> Success Watching Mode // <- Fail Waiting Mode 
+                                if (!ProcesNextBuyOrderPrice(WaitingSell, NEXT_U + PRICE_BIAS + price + SLASH + pb, false, NextPriceUp)) // -> Success Watching Mode // <- Fail Waiting Mode 
                                 {
                                     StopWaitingTimer(); // Waiting Mode is Running
                                 }
@@ -881,20 +876,33 @@ namespace BTNET.VM.ViewModels
                         }
                     }
 
-                    if (CalculateReverse(sell))
+                    if (CalculateReverse(WaitingSell))
                     {
                         StopWaitingTimer();
-                        StartWaitingGuesser?.Invoke(null, sell); // -> Waiting Guesser
+                        StartWaitingGuesser?.Invoke(null, WaitingSell); // -> Waiting Guesser
                         return;
                     }
 
-                    UpDown(ref sell);
+                    if (RealTimeVM.AskPrice > WaitingSell.Price)
+                    {
+                        InvokeUI.CheckAccess(() =>
+                        {
+                            Up++;
+                        });
+                    }
+                    else
+                    {
+                        InvokeUI.CheckAccess(() =>
+                        {
+                            Down++;
+                        });
+                    }
 
                     if (Down >= (WaitTime * FIVE_HUNDRED))
                     {
                         WaitingBlocked = true;
 
-                        if (!ProcesNextBuyOrderAskPrice(sell, TIME_ELAPSED, false)) // -> Success Watching Mode // <- Fail Waiting Mode
+                        if (!ProcesNextBuyOrderAskPrice(WaitingSell, TIME_ELAPSED, false)) // -> Success Watching Mode // <- Fail Waiting Mode
                         {
                             StopWaitingTimer(); // Waiting Mode is Running
                         }
@@ -906,7 +914,7 @@ namespace BTNET.VM.ViewModels
                     {
                         WaitingBlocked = true;
 
-                        if (!ProcesNextBuyOrderAskPrice(sell, WAIT_COUNT_ELAPSED, false)) // -> Success Watching Mode // <- Fail Waiting Mode
+                        if (!ProcesNextBuyOrderAskPrice(WaitingSell, WAIT_COUNT_ELAPSED, false)) // -> Success Watching Mode // <- Fail Waiting Mode
                         {
                             StopWaitingTimer(); // Waiting Mode is Running
                         }
@@ -921,90 +929,20 @@ namespace BTNET.VM.ViewModels
                     WriteLog.Info(STOP_WAITING);
                     StopWaitingTimer();
                 }
-            }, TWO, resolution: ONE);
-            WaitingBlocked = false;
-        }
-
-        protected private void GuesserWatchingMode(object o, OrderBase buyOrder)
-        {
-            UpdateStatus(GUESS_SELL, Static.Gold);
-
-            ScraperCounter.RestartGuesserStopwatch();
-
-            ScraperCounter.ChangeSide(OrderSide.Sell);
-
-            WatchingGuesserTimer.SetInterval(() =>
-            {
-                if (!WatchingGuesserBlocked)
-                {
-                    var counter = ScraperVM.ScraperCounter;
-                    var elapsed = counter.GuesserStopwatch.ElapsedMilliseconds;
-                    if (elapsed > GUESSER_START_MIN_MS)
-                    {
-                        if (UpdateCurrentPnlPercent(buyOrder) < SellPercent)
-                        {
-                            WatchingGuesserBlocked = true;
-                            WatchingLoopStarted?.Invoke(true, buyOrder); // <- Fail Watching Mode        
-                            return;
-                        }
-                    }
-
-                    if (elapsed > GUESSER_RESET_MIN_MS)
-                    {
-                        if (counter.GuesserDiv <= GUESSER_REVERSE_BIAS)
-                        {
-                            SettleWatchingGuesser(buyOrder); // -> Success Waiting Mode // <- Fail Watching Mode
-                            ScraperCounter.ResetCounter();
-                            return;
-                        }
-                    }
-
-                    if (MarketVM.Insights.Ready || MarketVM.Insights.Ready15Minutes)
-                    {
-                        if (counter.GuesserBias < GUESSER_LOW_HIGH_BIAS)
-                        {
-                            if (counter.GuessNewHighCount > GUESSER_LOW_COUNT_MAX || counter.GuessNewHightCountTwo > GUESSER_LOW_COUNT_MAX)
-                            {
-                                SettleWatchingGuesser(buyOrder); // -> Success Waiting Mode // <- Fail Watching Mode
-                                AddMessage(NEW_HIGH + counter.GuessNewHighCount + BAR + counter.GuessNewHightCountTwo);
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            if (counter.GuessNewHighCount > GUESSER_HIGH_COUNT_MAX || counter.GuessNewHightCountTwo > GUESSER_HIGH_COUNT_MAX)
-                            {
-                                SettleWatchingGuesser(buyOrder); // -> Success Waiting Mode // <- Fail Watching Mode
-                                AddMessage(NEW_HIGH + counter.GuessNewHighCount + BAR + counter.GuessNewHightCountTwo);
-                                return;
-                            }
-                        }
-                    }
-                }
-            }, TWO, resolution: ONE);
-            WatchingGuesserBlocked = false;
-        }
-
-        protected private void GuesserWaitingMode(object o, OrderBase sell)
-        {
-            UpdateStatus(GUESS_BUY, Static.Gold);
-
-            ScraperCounter.RestartGuesserStopwatch();
-
-            ScraperCounter.ChangeSide(OrderSide.Buy);
+            }, TWO, false, resolution: ONE);
 
             WaitingGuesserTimer.SetInterval(() =>
             {
-                if (!WaitingGuesserBlocked)
+                if (!WaitingGuesserBlocked && WaitingSell != null)
                 {
                     var counter = ScraperVM.ScraperCounter;
                     var elapsed = counter.GuesserStopwatch.ElapsedMilliseconds;
                     if (elapsed > GUESSER_START_MIN_MS)
                     {
-                        if (!CalculateReverse(sell))
+                        if (!CalculateReverse(WaitingSell))
                         {
                             StopGuesserWaitingTimer();
-                            WaitingLoopStarted?.Invoke(null, sell); // -> Fail Waiting Mode
+                            WaitingLoopStarted?.Invoke(null, WaitingSell); // -> Fail Waiting Mode
                             return;
                         }
                     }
@@ -1014,7 +952,7 @@ namespace BTNET.VM.ViewModels
                         if (counter.GuesserDiv <= GUESSER_REVERSE_BIAS)
                         {
                             //AddMessage("Slide: " + GuesserDiv + "|" + GuesserUpCount + "|" + GuesserDownCount);
-                            SettleWaitingGuesser(sell);
+                            SettleWaitingGuesser(WaitingSell);
                             ScraperCounter.ResetCounter();
                             return;
                         }
@@ -1027,42 +965,140 @@ namespace BTNET.VM.ViewModels
                         {
                             if (chl.Value)
                             {
-                                SettleWaitingGuesser(sell);
+                                SettleWaitingGuesser(WaitingSell);
                                 AddMessage(NEW_LOW + counter.GuessNewLowCount + BAR + counter.GuessNewLowCountTwo);
                                 return;
                             }
                             else
                             {
-                                SettleWaitingGuesser(sell);
+                                SettleWaitingGuesser(WaitingSell);
                                 AddMessage(NEW_LOW + counter.GuessNewLowCount + BAR + counter.GuessNewLowCountTwo);
                                 return;
                             }
                         }
                     }
                 }
-            }, TWO, resolution: ONE);
+            }, TWO, false, resolution: ONE);
+
+            WatchingGuesserTimer.SetInterval(() =>
+            {
+                if (!WatchingGuesserBlocked && WaitingBuy != null)
+                {
+                    var counter = ScraperVM.ScraperCounter;
+                    var elapsed = counter.GuesserStopwatch.ElapsedMilliseconds;
+                    if (elapsed > GUESSER_START_MIN_MS)
+                    {
+                        if (UpdateCurrentPnlPercent(WaitingBuy) < SellPercent)
+                        {
+                            WatchingGuesserBlocked = true;
+                            WatchingLoopStarted?.Invoke(true, WaitingBuy); // <- Fail Watching Mode        
+                            return;
+                        }
+                    }
+
+                    if (elapsed > GUESSER_RESET_MIN_MS)
+                    {
+                        if (counter.GuesserDiv <= GUESSER_REVERSE_BIAS)
+                        {
+                            SettleWatchingGuesser(WaitingBuy); // -> Success Waiting Mode // <- Fail Watching Mode
+                            ScraperCounter.ResetCounter();
+                            return;
+                        }
+                    }
+
+                    if (MarketVM.Insights.Ready || MarketVM.Insights.Ready15Minutes)
+                    {
+                        if (counter.GuesserBias < GUESSER_LOW_HIGH_BIAS)
+                        {
+                            if (counter.GuessNewHighCount > GUESSER_LOW_COUNT_MAX || counter.GuessNewHightCountTwo > GUESSER_LOW_COUNT_MAX)
+                            {
+                                SettleWatchingGuesser(WaitingBuy); // -> Success Waiting Mode // <- Fail Watching Mode
+                                AddMessage(NEW_HIGH + counter.GuessNewHighCount + BAR + counter.GuessNewHightCountTwo);
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            if (counter.GuessNewHighCount > GUESSER_HIGH_COUNT_MAX || counter.GuessNewHightCountTwo > GUESSER_HIGH_COUNT_MAX)
+                            {
+                                SettleWatchingGuesser(WaitingBuy); // -> Success Waiting Mode // <- Fail Watching Mode
+                                AddMessage(NEW_HIGH + counter.GuessNewHighCount + BAR + counter.GuessNewHightCountTwo);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }, TWO, false, resolution: ONE);
+        }
+
+        protected private void WaitingLoopStart(object o, OrderBase sell)
+        {
+            UpdateStatus(WAITING, Static.Green);
+
+            ResetPriceQuantity(sell, false);
+
+            IsSwitchEnabled = true;
+            IsAddEnabled = true;
+            IsCloseCurrentEnabled = false;
+            ResetLoop();
+            StopGuesserWaitingTimer();
+            NewWaitingSell(sell);
+        }
+
+        private void NewWaitingSell(OrderBase sell)
+        {
+            WaitingSell = sell;
+            WaitingBlocked = false;
+            WaitingTimer.Start();
+        }
+
+        protected private void GuesserWatchingMode(object o, OrderBase buyOrder)
+        {
+            UpdateStatus(GUESS_SELL, Static.Gold);
+
+            ScraperCounter.RestartGuesserStopwatch();
+
+            ScraperCounter.ChangeSide(OrderSide.Sell);
+
+            NewWatchingGuesser(buyOrder);
+        }
+
+        protected private void GuesserWaitingMode(object o, OrderBase sell)
+        {
+            UpdateStatus(GUESS_BUY, Static.Gold);
+
+            ScraperCounter.RestartGuesserStopwatch();
+
+            ScraperCounter.ChangeSide(OrderSide.Buy);
+
+            NewWaitingGuesser(sell);
+        }
+
+        private void NewWatchingGuesser(OrderBase buy)
+        {
+            WaitingBuy = buy;
+            WatchingGuesserBlocked = false;
+            WatchingGuesserTimer.Start();
+        }
+
+        private void NewWaitingGuesser(OrderBase sell)
+        {
+            WaitingSell = sell;
             WaitingGuesserBlocked = false;
+            WaitingGuesserTimer.Start();
         }
 
         protected private void StopGuesserWatchingTimer()
         {
             WatchingGuesserBlocked = true;
-            if (WatchingGuesserTimer.Stop())
-            {
-                WatchingGuesserTimer.SetAction(null!);
-            }
-
+            WatchingGuesserTimer.Stop();
             ScraperCounter.ResetGuesserStopwatch();
         }
 
         protected private void StopGuesserWaitingTimer()
         {
+            WaitingGuesserTimer.Stop();
             WaitingGuesserBlocked = true;
-            if (WaitingGuesserTimer.Stop())
-            {
-                WaitingGuesserTimer.SetAction(null!);
-            }
-
             ScraperCounter.ResetGuesserStopwatch();
         }
 
@@ -1127,25 +1163,7 @@ namespace BTNET.VM.ViewModels
 
             return false;
         }
-
-        protected private void UpDown(ref OrderBase sell)
-        {
-            if (RealTimeVM.AskPrice > sell.Price)
-            {
-                InvokeUI.CheckAccess(() =>
-                {
-                    Up++;
-                });
-            }
-            else
-            {
-                InvokeUI.CheckAccess(() =>
-                {
-                    Down++;
-                });
-            }
-        }
-
+          
         protected private decimal UpdateCurrentPnlPercent(OrderBase workingBuy)
         {
             decimal d = UpdateCurrentPnlPercentInternal(workingBuy, out decimal pnl);
@@ -1400,7 +1418,6 @@ namespace BTNET.VM.ViewModels
             WaitingBlocked = true;
             if (WaitingTimer.Stop())
             {
-                WaitingTimer.SetAction(null!);
                 ResetLoop();
             }
         }

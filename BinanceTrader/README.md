@@ -1,3 +1,12 @@
+### Version 2.7.0.0
+- [x] You can now choose between `Market` and `Limit FOK` orders for the `Scraper`
+- [x] Add `UseLimitAdd` checkbox to Scraper UI
+- [x] Add `UseLimitClose` checkbox to Scraper UI
+- [x] Add `UseLimitSell`  checkbox to Scraper UI
+- [x] Add `UseLimitBuy` checkbox to Scraper UI
+- [x] Save new `Settings` for the `Scraper`
+- [x] Cleanup existing `Settings`
+
 ### Version 2.6.0.9
 - [x] Change how `WatchingGuesser` is created/started/stopped
 - [x] Change how `WaitingGuesser` is created/started/stopped

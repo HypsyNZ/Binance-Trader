@@ -1,3 +1,9 @@
+### Version 2.6.0.9
+- [x] Change how `WatchingGuesser` is created/started/stopped
+- [x] Change how `WaitingGuesser` is created/started/stopped
+- [x] Change how `WaitingMode` is created/started/stopped
+- [x] Fixes some timing related issues with the `Scraper`
+
 ### Version 2.6.0.8
 - [x] All Orders placed by the Scraper are now `Fill or Kill Limit Orders`
 - [x] `Sell Percent` is now the `Minimum PnL` allowed
